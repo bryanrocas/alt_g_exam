@@ -4,23 +4,23 @@ using UnityEngine;
 
 public class ProjectileController : MonoBehaviour 
 {
-	[SerializeField] GameObject bubblePrefab ;
-
-	void OnEnable()
+	float speed 
 	{
-		AimController.FireBubble += InstantiateBubble;
+		get
+		{
+			return Game.Manager.projectileSpeed;
+		}
 	}
 
-	void OnDisable()
+	bool isMoving = true;
+
+	void Update () 
 	{
-		AimController.FireBubble -= InstantiateBubble;
+		if( isMoving ) transform.position += transform.up * speed * Time.deltaTime;
 	}
 
-	void InstantiateBubble( Vector3 direction )
+	void OnCollisionEnter2D(Collision2D coll) 
 	{
-		this.Debug( "FIRE: " + direction );
-
-		GameObject bullet = Instantiate(bubblePrefab, direction, Quaternion.identity) as GameObject;
-		bullet.GetComponent<Rigidbody2D>().velocity = direction ;
+		isMoving = false;
 	}
 }

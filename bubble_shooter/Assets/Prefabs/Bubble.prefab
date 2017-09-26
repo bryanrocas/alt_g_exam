@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4086055157711374}
   - component: {fileID: 212196149888260372}
   - component: {fileID: 58524172109180342}
-  - component: {fileID: 50117490327911902}
+  - component: {fileID: 50812967825127196}
   m_Layer: 0
   m_Name: Bubble
   m_TagString: Untagged
@@ -36,13 +36,13 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1316479298894704}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: -3.62, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!50 &50117490327911902
+--- !u!50 &50812967825127196
 Rigidbody2D:
   serializedVersion: 4
   m_ObjectHideFlags: 1
@@ -53,11 +53,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
+  m_Mass: 100
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 0
-  m_Material: {fileID: 6200000, guid: 97cfb4f9d79c07b4eadb7fece5457666, type: 2}
+  m_Material: {fileID: 0}
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0

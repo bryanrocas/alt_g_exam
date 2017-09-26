@@ -9,35 +9,44 @@ public class AimController : MonoBehaviour
 	[SerializeField] float minClamp = -80f;
 	[SerializeField] float maxClamp = 80f;
 	[SerializeField] float rotateSpeed = 2f;
+	[SerializeField] float offset = 270f;
 
 
-	public delegate void FireProjectileDg( Vector3 direction );
+	public delegate void FireProjectileDg();
 	public static event FireProjectileDg FireBubble;
 
+	bool IsAimInBounds
+	{
+		get
+		{
+			return ( rotateZ > maxClamp || rotateZ < minClamp ) ? false : true;
+		}
+	}
 
 	void Update()
 	{
 		#if DEBUG
-		Vector3 forward = transform.TransformDirection(Vector3.up) * 10;
+		Vector3 forward = transform.TransformDirection(Vector3.up) * 10f;
+		//this.Debug( forward );
 		Debug.DrawRay(transform.position, forward, Color.green);
 		#endif
 
 		RotateAim();
 
-
-		if( Input.GetKeyUp(KeyCode.Space) )
+		if( Input.GetKeyUp(KeyCode.Space) || Input.GetButtonUp("Fire1") && IsAimInBounds )
 		{
-			if( FireBubble != null ) FireBubble( transform.TransformDirection(Vector3.up) ) ; 
+			if( FireBubble != null ) FireBubble() ; 
 		}
 	}
 
 	void RotateAim()
 	{
-		rotateZ += Input.GetAxis("Horizontal") * rotateSpeed;
-		rotateZ = Mathf.Clamp( rotateZ , minClamp , maxClamp );
+		Vector3 difference = Camera.main.ScreenToWorldPoint(Input.mousePosition) - transform.position;
+		difference.Normalize();
+		rotateZ = Mathf.Atan2(difference.y, difference.x) * Mathf.Rad2Deg;
 
-		transform.localEulerAngles = new Vector3( transform.localEulerAngles.x,
-			transform.localEulerAngles.y,
-			-rotateZ);
+		this.Debug(rotateZ+offset + " " + rotateZ);
+
+		transform.rotation = Quaternion.Euler(0f, 0f, rotateZ + offset);
 	}
 }
