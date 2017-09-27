@@ -4,11 +4,11 @@ using UnityEngine;
 
 public enum BubbleColor
 {
-	red,
-	green,
-	blue,
-	yellow,
-	white
+	red=0,
+	green=1,
+	blue=2,
+	yellow=3,
+	white=4
 }
 
 public interface IBubble

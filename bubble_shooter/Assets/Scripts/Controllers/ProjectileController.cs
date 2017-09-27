@@ -22,5 +22,9 @@ public class ProjectileController : MonoBehaviour
 	void OnCollisionEnter2D(Collision2D coll) 
 	{
 		isMoving = false;
+
+		this.GetComponent<Bubble>().RegisterNeighbors() ;
+
+		Destroy( this ); // we remove the projectile controller attached to this object
 	}
 }

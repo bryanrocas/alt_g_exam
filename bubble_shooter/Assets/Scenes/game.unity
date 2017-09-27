@@ -284,7 +284,7 @@ GameObject:
   - component: {fileID: 439931466}
   - component: {fileID: 439931468}
   - component: {fileID: 439931467}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pillar (3)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -449,6 +449,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bubblePrefab: {fileID: 1316479298894704, guid: 9fdce93cd38327d4da79ad84ebe8fda8,
     type: 2}
+  loadedBubble: {fileID: 297890698}
 --- !u!1 &581296251
 GameObject:
   m_ObjectHideFlags: 0
@@ -458,6 +459,7 @@ GameObject:
   m_Component:
   - component: {fileID: 581296253}
   - component: {fileID: 581296252}
+  - component: {fileID: 581296254}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -491,6 +493,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &581296254
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 581296251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fd9bfdf357d4ab44bbe8f9fb8b45419b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDestroyable: 0
 --- !u!1 &1066075089
 GameObject:
   m_ObjectHideFlags: 0
@@ -564,7 +578,7 @@ GameObject:
   - component: {fileID: 1288674103}
   - component: {fileID: 1288674105}
   - component: {fileID: 1288674104}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pillar (1)
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -643,7 +657,7 @@ GameObject:
   - component: {fileID: 1652274338}
   - component: {fileID: 1652274337}
   - component: {fileID: 1652274336}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pillar
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -786,7 +800,7 @@ GameObject:
   - component: {fileID: 1761523485}
   - component: {fileID: 1761523487}
   - component: {fileID: 1761523486}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: pillar (2)
   m_TagString: Untagged
   m_Icon: {fileID: 0}

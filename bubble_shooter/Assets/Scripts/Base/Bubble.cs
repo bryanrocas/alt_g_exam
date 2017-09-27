@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public abstract class Bubble : MonoBehaviour, IBubble
+public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 {
 	[SerializeField] int id;
 	[SerializeField] BubbleColor bubbleColor;
@@ -38,6 +38,38 @@ public abstract class Bubble : MonoBehaviour, IBubble
 	{
 		ID = id;
 		BubbleColor = bubbleColor;
+
+		BubblePool.Manager.RegisterBubbles( this ) ;
 	}
 	#endregion
+
+
+
+
+
+	public List<IBubble> GetMatchingNeighbors ()
+	{
+		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , 1f , 9 );
+
+		List<IBubble> matchingNeighbors = new List<IBubble>();
+
+		foreach( Collider2D col in cols )
+		{
+			IBubble bubble = col.GetComponent<IBubble>() ;
+			if( bubble.BubbleColor == BubbleColor ) matchingNeighbors.Add( bubble );
+		}
+
+		return matchingNeighbors;
+	}
+
+	public void RegisterNeighbors()
+	{
+		BubblePool.Manager.CheckMatchingNeighbors(  ID , BubbleColor );
+	}
+
+
+	public void OnDestroy()
+	{
+		if( BubblePool.Manager != null ) BubblePool.Manager.UnRegisterBubbles( this );
+	}
 }
