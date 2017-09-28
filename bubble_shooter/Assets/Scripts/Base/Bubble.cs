@@ -64,7 +64,7 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 
 	public void RegisterNeighbors()
 	{
-		BubblePool.Manager.CheckMatchingNeighbors(  ID , BubbleColor );
+		BubblePool.Manager.RegisterNeighbors( this ,GetMatchingNeighbors() );
 	}
 
 

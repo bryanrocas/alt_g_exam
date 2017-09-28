@@ -11,9 +11,6 @@ public class BubblePool : Singleton<BubblePool>
 		IBubble isFound = bubbles.Find( obj => obj == bubble );
 
 		if( isFound == null ) bubbles.Add( bubble );
-
-
-		this.Debug( bubbles.Count );
 	}
 
 	public void UnRegisterBubbles( IBubble bubble )
@@ -21,19 +18,78 @@ public class BubblePool : Singleton<BubblePool>
 		bubbles.Remove( bubble );
 	}
 
-	List<IBubble> chain = new List<IBubble>();
+	Dictionary<string,Dictionary<int,List<IBubble>>> chains = new Dictionary<string,Dictionary<int,List<IBubble>>>() ;
 
-	// find all bubbles with linking neighbors
-	public void CheckMatchingNeighbors( int setId , BubbleColor setColor )
+	public void RegisterNeighbors( IBubble bubble , List<IBubble> neighbors )
 	{
-		IBubble mainBubble = bubbles.Find( obj => obj.ID == setId && obj.BubbleColor == setColor ) ;
+		// we check if entry based on color has been made
+		if( !chains.ContainsKey( bubble.BubbleColor.ToString() ) )
+		{
+			List<IBubble> entry = new List<IBubble>();
+			entry.Add( bubble );
 
-		List<IBubble> neighbors = ((IBubbleDetect)mainBubble).GetMatchingNeighbors() ;
+			Dictionary<int, List<IBubble>> entryDict = new Dictionary<int, List<IBubble>>() ;
+			entryDict.Add( 0 , entry );
 
-		if( neighbors.Count == 0 ) return; //if mainBubble has no neighbors around, don't proceed
+			chains.Add( bubble.BubbleColor.ToString() , entryDict );
+		}
+		// if already created, we check if IBubble is part of the list
+		else
+		{
+			Dictionary<int, List<IBubble>> dict = chains[ bubble.BubbleColor.ToString() ] ;
 
-		chain = new List<IBubble>();
-		chain.Add( mainBubble );
+			bool entryCreated = false ;
+
+			// for each dict entry, we check if it contains the bubble
+			for( int x = 0 ; x < dict.Count ; x++ )
+			{
+				entryCreated= dict[x].Contains( bubble ) ;
+
+				if( entryCreated ) break;
+
+				// if not, we check if it contains neighbors related to the bubble
+				for( int y = 0 ; y < neighbors.Count ; y++ )
+				{
+					entryCreated = dict[x].Contains( neighbors[y] ) ;
+
+					if( entryCreated )
+					{
+						// if it contains neighbors related to the bubble, we add the bubble to this list
+						dict[x].Add( bubble ) ;
+						break;
+					}
+				}
+
+				if( entryCreated ) break;
+			}
+
+			//if by the end of the pass entryCreated is still false, we create a new entry
+			if( !entryCreated )
+			{
+				List<IBubble> entry = new List<IBubble>();
+				entry.Add( bubble );
+
+				chains[bubble.BubbleColor.ToString()].Add( dict.Count , entry );
+			}
+		}
+
+		#if DEBUG
+		this.Debug( ">>>>>>> "+ chains.Count );
+
+		foreach( string key in chains.Keys )
+		{
+			this.Debug( "ChainKey: " + key + " " + chains[key].Count ) ;
+			foreach( int entrykey in chains[key].Keys )
+			{
+				this.Debug( "EntryKey: " + entrykey + " " + chains[key][entrykey].Count  ) ;
+
+				foreach( IBubble entryBubble in chains[key][entrykey] )
+				{
+					this.Debug( "ListEntries: " + entryBubble.ID ) ;
+				}
+			}
+		}
+		#endif
 	}
 
 	// WIP:

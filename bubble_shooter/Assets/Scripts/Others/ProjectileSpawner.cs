@@ -23,12 +23,12 @@ public class ProjectileSpawner : MonoBehaviour
 
 	int index = 0 ;
 	int bubbleColor ;
-	Sprite[] sprites ;
+	List<Sprite> sprites = new List<Sprite>() ;
 
 	void InstantiateBubble()
 	{
 		GameObject bubble = Instantiate(bubblePrefab, transform.position, transform.rotation) as GameObject;
-		bubble.GetComponent<SpriteRenderer>().sprite = sprites[bubbleColor] ;
+		bubble.GetComponent<SpriteRenderer>().sprite = FindSprite();
 		bubble.AddComponent<Bubble>().Init( index , (BubbleColor) bubbleColor ) ;
 		bubble.AddComponent<ProjectileController>();
 
@@ -39,9 +39,14 @@ public class ProjectileSpawner : MonoBehaviour
 	{
 		bubbleColor = Random.Range( 0, System.Enum.GetValues(typeof(BubbleColor)).Length );
 
-		if( sprites == null ) sprites = Resources.LoadAll<Sprite>( loadedBubble.sprite.texture.name );
+		if( sprites.Count == 0 ) sprites = new List<Sprite>(Resources.LoadAll<Sprite>( loadedBubble.sprite.texture.name )) ;
 
-		loadedBubble.sprite = sprites[bubbleColor];
+		loadedBubble.sprite = FindSprite();
 
+	}
+
+	Sprite FindSprite()
+	{
+		return sprites.Find( obj => obj.name == ((BubbleColor) bubbleColor).ToString() ) ;
 	}
 }
