@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class ProjectileSpawner : MonoBehaviour 
 {
-	[SerializeField] GameObject bubblePrefab ;
 	[SerializeField] SpriteRenderer loadedBubble;
 
 	void OnEnable()
@@ -23,30 +22,17 @@ public class ProjectileSpawner : MonoBehaviour
 
 	int index = 0 ;
 	int bubbleColor ;
-	List<Sprite> sprites = new List<Sprite>() ;
 
 	void InstantiateBubble()
 	{
-		GameObject bubble = Instantiate(bubblePrefab, transform.position, transform.rotation) as GameObject;
-		bubble.GetComponent<SpriteRenderer>().sprite = FindSprite();
-		bubble.AddComponent<Bubble>().Init( index , (BubbleColor) bubbleColor ) ;
+		GameObject bubble = Spawner.Manager.InstantiateBubble( transform.position , transform.rotation , (BubbleColor) bubbleColor ); 
 		bubble.AddComponent<ProjectileController>();
-
-		index++;
 	}
 		
 	void ChangeAmmo()
 	{
 		bubbleColor = Random.Range( 0, System.Enum.GetValues(typeof(BubbleColor)).Length );
+		loadedBubble.sprite = Spawner.Manager.FindSprite( (BubbleColor) bubbleColor );
 
-		if( sprites.Count == 0 ) sprites = new List<Sprite>(Resources.LoadAll<Sprite>( loadedBubble.sprite.texture.name )) ;
-
-		loadedBubble.sprite = FindSprite();
-
-	}
-
-	Sprite FindSprite()
-	{
-		return sprites.Find( obj => obj.name == ((BubbleColor) bubbleColor).ToString() ) ;
 	}
 }

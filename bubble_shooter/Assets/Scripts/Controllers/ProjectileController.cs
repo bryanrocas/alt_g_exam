@@ -24,6 +24,7 @@ public class ProjectileController : MonoBehaviour
 		isMoving = false;
 
 		this.GetComponent<Bubble>().RegisterNeighbors() ;
+		this.GetComponent<Bubble>().MatchCheck() ;
 
 		Destroy( this ); // we remove the projectile controller attached to this object
 	}

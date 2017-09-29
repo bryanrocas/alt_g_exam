@@ -18,10 +18,20 @@ public class BubblePool : Singleton<BubblePool>
 		bubbles.Remove( bubble );
 	}
 
+	public void InitRegistry()
+	{
+		foreach( IBubbleDetect bubble in bubbles )
+		{
+			bubble.RegisterNeighbors() ;
+		}
+	}
+
 	Dictionary<string,Dictionary<int,List<IBubble>>> chains = new Dictionary<string,Dictionary<int,List<IBubble>>>() ;
 
 	public void RegisterNeighbors( IBubble bubble , List<IBubble> neighbors )
 	{
+		int lastKeyValue = 0 ;
+
 		// we check if entry based on color has been made
 		if( !chains.ContainsKey( bubble.BubbleColor.ToString() ) )
 		{
@@ -39,23 +49,27 @@ public class BubblePool : Singleton<BubblePool>
 			Dictionary<int, List<IBubble>> dict = chains[ bubble.BubbleColor.ToString() ] ;
 
 			bool entryCreated = false ;
+			int ctr = 0 ;
 
 			// for each dict entry, we check if it contains the bubble
-			for( int x = 0 ; x < dict.Count ; x++ )
+			//for( int x = 0 ; x < dict.Count ; x++ )
+			foreach( int entrykey in dict.Keys )
 			{
-				entryCreated= dict[x].Contains( bubble ) ;
+				lastKeyValue = entrykey;
+
+				entryCreated= dict[entrykey].Contains( bubble ) ;
 
 				if( entryCreated ) break;
 
 				// if not, we check if it contains neighbors related to the bubble
 				for( int y = 0 ; y < neighbors.Count ; y++ )
 				{
-					entryCreated = dict[x].Contains( neighbors[y] ) ;
+					entryCreated = dict[entrykey].Contains( neighbors[y] ) ;
 
 					if( entryCreated )
 					{
 						// if it contains neighbors related to the bubble, we add the bubble to this list
-						dict[x].Add( bubble ) ;
+						dict[entrykey].Add( bubble ) ;
 						break;
 					}
 				}
@@ -69,11 +83,10 @@ public class BubblePool : Singleton<BubblePool>
 				List<IBubble> entry = new List<IBubble>();
 				entry.Add( bubble );
 
-				chains[bubble.BubbleColor.ToString()].Add( dict.Count , entry );
+				chains[bubble.BubbleColor.ToString()].Add( lastKeyValue+1 , entry );
 			}
 		}
 
-		#if DEBUG
 		this.Debug( ">>>>>>> "+ chains.Count );
 
 		foreach( string key in chains.Keys )
@@ -89,11 +102,34 @@ public class BubblePool : Singleton<BubblePool>
 				}
 			}
 		}
-		#endif
 	}
 
-	// WIP:
-	// the general idea is to get the neighbors linked to one node and check their neighbors
-	// continue checking neighbors until a chain is formed
-	// the problem is how to code this looping logic in an optimized manner
+	public void DestroyMatches( IBubble bubble )
+	{
+		Dictionary<int, List<IBubble>> dict = chains[ bubble.BubbleColor.ToString() ] ;
+		int storedKey = 0 ;
+		IBubble match = null ;
+
+		foreach( int entrykey in dict.Keys )
+		{
+			match = dict[entrykey].Find( obj => obj == bubble ) ;
+			if( match != null ) 
+			{
+				this.DebugError( "Found: " +  entrykey + " " + dict[entrykey].Count ) ;
+				storedKey = entrykey;
+				break;
+			}
+		}
+
+		if( match == null ) return;
+
+		List<IBubble> bubblePops = new List<IBubble>(dict[ storedKey ]) ;
+
+		dict.Remove( storedKey ) ;
+
+		foreach( IBubble bubblePop in bubblePops )
+		{
+			Destroy( ((Bubble)bubblePop).gameObject ) ;
+		}
+	}
 }

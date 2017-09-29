@@ -49,7 +49,7 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 
 	public List<IBubble> GetMatchingNeighbors ()
 	{
-		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , 1f , 9 );
+		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , Game.Manager.bubbleRadius , 9 );
 
 		List<IBubble> matchingNeighbors = new List<IBubble>();
 
@@ -67,6 +67,10 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 		BubblePool.Manager.RegisterNeighbors( this ,GetMatchingNeighbors() );
 	}
 
+	public void MatchCheck()
+	{
+		BubblePool.Manager.DestroyMatches( this ) ;
+	}
 
 	public void OnDestroy()
 	{

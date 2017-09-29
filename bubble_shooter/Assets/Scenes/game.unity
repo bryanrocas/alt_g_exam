@@ -447,8 +447,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 035db2f38d7a96e4fbbf6e50abf85123, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bubblePrefab: {fileID: 1316479298894704, guid: 9fdce93cd38327d4da79ad84ebe8fda8,
-    type: 2}
   loadedBubble: {fileID: 297890698}
 --- !u!1 &581296251
 GameObject:
@@ -460,6 +458,7 @@ GameObject:
   - component: {fileID: 581296253}
   - component: {fileID: 581296252}
   - component: {fileID: 581296254}
+  - component: {fileID: 581296255}
   m_Layer: 0
   m_Name: Managers
   m_TagString: Untagged
@@ -480,6 +479,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDestroyable: 0
   projectileSpeed: 10
+  bubbleRadius: 1
+  horBubbles: 6
+  verBubbles: 6
+  bubblePrefab: {fileID: 1316479298894704, guid: 9fdce93cd38327d4da79ad84ebe8fda8,
+    type: 2}
 --- !u!4 &581296253
 Transform:
   m_ObjectHideFlags: 0
@@ -502,6 +506,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fd9bfdf357d4ab44bbe8f9fb8b45419b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDestroyable: 0
+--- !u!114 &581296255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 581296251}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 26dadacee1bceae46af63f640a4f5a38, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   isDestroyable: 0
