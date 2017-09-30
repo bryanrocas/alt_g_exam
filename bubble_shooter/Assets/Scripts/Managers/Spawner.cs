@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Spawner : Singleton<Spawner> 
 {
-	Vector3 initPos = new Vector3( -2.55f , 5.7f, 1f ) ;
+	Vector3 initPos = new Vector3( -4.5f ,9f, 1f ) ;
 	float xOffset = 1.0f ;
 	float yOffset = 1.0f ;
 
@@ -19,8 +19,11 @@ public class Spawner : Singleton<Spawner>
 		{
 			for( int y = 0 ; y < Game.Manager.verBubbles ; y++ )
 			{
+				int rowFlag = y % 2;
+				float adjustment = (rowFlag == 0) ? 0f : 0.5f;
+
 				int bubbleColor = Random.Range( 0, System.Enum.GetValues(typeof(BubbleColor)).Length ); ;
-				GameObject bubble = InstantiateBubble( new Vector3( initPos.x + (xOffset * x) , initPos.y - (yOffset * y) , initPos.z ) , transform.rotation , (BubbleColor) bubbleColor ) ;
+				GameObject bubble = InstantiateBubble( new Vector3( initPos.x + (xOffset * x) + adjustment , initPos.y - (yOffset * y) , initPos.z ) , transform.rotation , (BubbleColor) bubbleColor ) ;
 				bubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll ;
 			}
 		}
