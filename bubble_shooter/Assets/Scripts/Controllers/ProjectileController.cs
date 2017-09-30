@@ -12,11 +12,25 @@ public class ProjectileController : MonoBehaviour
 		}
 	}
 
+	Rigidbody2D rigidbdy ;
+	Bubble bubble ;
 
 	public void Init () 
 	{
+		rigidbdy = GetComponent<Rigidbody2D>() ;
+		bubble = GetComponent<Bubble>() ;
+
 		Vector3 force = transform.up.normalized * speed ;
-		GetComponent<Rigidbody2D>().AddForce( new Vector2(force.x,force.y), ForceMode2D.Force ) ;
+		rigidbdy.AddForce( new Vector2(force.x,force.y), ForceMode2D.Force ) ;
+		isMoving = true ;
+	}
+
+	bool isMoving = false;
+	Vector3 lastPos = new Vector3() ;
+
+	void Update()
+	{
+		if( isMoving )  lastPos = transform.position ;
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) 
@@ -24,9 +38,16 @@ public class ProjectileController : MonoBehaviour
 		//this.DebugError( coll.gameObject.layer ) ;
 		if( coll.gameObject.layer == LayerMask.NameToLayer("Bubble") )
 		{
-			this.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll ;
-			this.GetComponent<Bubble>().RegisterNeighbors() ;
-			this.GetComponent<Bubble>().MatchCheck() ;
+			isMoving = false;
+
+			Vector2 contact = coll.contacts[0].point ;
+			Vector3 dir = new Vector3(contact.x, contact.y, 1f) - lastPos;
+			dir = -dir.normalized;
+			transform.position = new Vector3(coll.transform.position.x + dir.x, coll.transform.position.y + dir.y, 1f)  ;
+
+			rigidbdy.constraints = RigidbodyConstraints2D.FreezeAll ;
+			bubble.RegisterNeighbors() ;
+			bubble.MatchCheck() ;
 
 			Destroy( this ); // we remove the projectile controller attached to this object
 		}
