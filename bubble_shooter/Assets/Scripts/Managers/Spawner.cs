@@ -11,11 +11,6 @@ public class Spawner : Singleton<Spawner>
 	int index = 0;
 	List<Sprite> sprites = new List<Sprite>() ;
 
-	void Awake()
-	{
-		if( sprites.Count == 0 ) sprites = new List<Sprite>(Resources.LoadAll<Sprite>( "color_ball_full" )) ;
-	}
-
 	void Start()
 	{
 		// spawn objects based on X and Y
@@ -26,6 +21,7 @@ public class Spawner : Singleton<Spawner>
 			{
 				int bubbleColor = Random.Range( 0, System.Enum.GetValues(typeof(BubbleColor)).Length ); ;
 				GameObject bubble = InstantiateBubble( new Vector3( initPos.x + (xOffset * x) , initPos.y - (yOffset * y) , initPos.z ) , transform.rotation , (BubbleColor) bubbleColor ) ;
+				bubble.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll ;
 			}
 		}
 
@@ -45,6 +41,7 @@ public class Spawner : Singleton<Spawner>
 
 	public Sprite FindSprite( BubbleColor bubbleColor )
 	{
+		if( sprites.Count == 0 ) sprites = new List<Sprite>(Resources.LoadAll<Sprite>( "color_ball_full" )) ;
 		return sprites.Find( obj => obj.name == (bubbleColor).ToString() ) ;
 	}
 }

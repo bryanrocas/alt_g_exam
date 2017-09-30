@@ -12,20 +12,23 @@ public class ProjectileController : MonoBehaviour
 		}
 	}
 
-	bool isMoving = true;
 
-	void Update () 
+	public void Init () 
 	{
-		if( isMoving ) transform.position += transform.up * speed * Time.deltaTime;
+		Vector3 force = transform.up.normalized * speed ;
+		GetComponent<Rigidbody2D>().AddForce( new Vector2(force.x,force.y), ForceMode2D.Force ) ;
 	}
 
 	void OnCollisionEnter2D(Collision2D coll) 
 	{
-		isMoving = false;
+		//this.DebugError( coll.gameObject.layer ) ;
+		if( coll.gameObject.layer == LayerMask.NameToLayer("Bubble") )
+		{
+			this.GetComponent<Rigidbody2D>().constraints = RigidbodyConstraints2D.FreezeAll ;
+			this.GetComponent<Bubble>().RegisterNeighbors() ;
+			this.GetComponent<Bubble>().MatchCheck() ;
 
-		this.GetComponent<Bubble>().RegisterNeighbors() ;
-		this.GetComponent<Bubble>().MatchCheck() ;
-
-		Destroy( this ); // we remove the projectile controller attached to this object
+			Destroy( this ); // we remove the projectile controller attached to this object
+		}
 	}
 }

@@ -26,7 +26,7 @@ public class ProjectileSpawner : MonoBehaviour
 	void InstantiateBubble()
 	{
 		GameObject bubble = Spawner.Manager.InstantiateBubble( transform.position , transform.rotation , (BubbleColor) bubbleColor ); 
-		bubble.AddComponent<ProjectileController>();
+		bubble.AddComponent<ProjectileController>().Init();
 	}
 		
 	void ChangeAmmo()

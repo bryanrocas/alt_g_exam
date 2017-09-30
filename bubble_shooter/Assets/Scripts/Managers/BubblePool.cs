@@ -115,13 +115,13 @@ public class BubblePool : Singleton<BubblePool>
 			match = dict[entrykey].Find( obj => obj == bubble ) ;
 			if( match != null ) 
 			{
-				this.DebugError( "Found: " +  entrykey + " " + dict[entrykey].Count ) ;
+				//this.DebugError( "Found: " +  entrykey + " " + dict[entrykey].Count ) ;
 				storedKey = entrykey;
 				break;
 			}
 		}
 
-		if( match == null ) return;
+		if(dict[ storedKey ].Count <= 2 ) return;
 
 		List<IBubble> bubblePops = new List<IBubble>(dict[ storedKey ]) ;
 

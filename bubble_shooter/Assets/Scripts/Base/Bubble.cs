@@ -49,14 +49,15 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 
 	public List<IBubble> GetMatchingNeighbors ()
 	{
-		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , Game.Manager.bubbleRadius , 9 );
+		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , 
+			Game.Manager.bubbleRadius , 1 << LayerMask.NameToLayer("Bubble") );
 
 		List<IBubble> matchingNeighbors = new List<IBubble>();
 
 		foreach( Collider2D col in cols )
 		{
 			IBubble bubble = col.GetComponent<IBubble>() ;
-			if( bubble.BubbleColor == BubbleColor ) matchingNeighbors.Add( bubble );
+			if( bubble != null && bubble.BubbleColor == BubbleColor ) matchingNeighbors.Add( bubble );
 		}
 
 		return matchingNeighbors;
