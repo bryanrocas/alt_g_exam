@@ -8,6 +8,9 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	[SerializeField] int id;
 	[SerializeField] BubbleColor bubbleColor;
 
+	Rigidbody2D rb ;
+	Collider2D col ;
+
 	#region IBubble implementation
 	public int ID 
 	{
@@ -38,8 +41,6 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	{
 		ID = id;
 		BubbleColor = bubbleColor;
-
-		BubblePool.Manager.RegisterBubbles( this ) ;
 	}
 	#endregion
 
@@ -65,16 +66,29 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 
 	public void RegisterNeighbors()
 	{
-		BubblePool.Manager.RegisterNeighbors( this ,GetMatchingNeighbors() );
+		GetMatchingNeighbors();
+		BubblePool.Manager.RegisterNeighbors( GetMatchingNeighbors() );
 	}
 
-	public void MatchCheck()
+	bool toDestroy = false ;
+
+	public void FallDown()
 	{
-		BubblePool.Manager.DestroyMatches( this ) ;
+		rb = GetComponent<Rigidbody2D>();
+		col = GetComponent<Collider2D>();
+		rb.mass = Random.Range(0.2f,1f) ;
+		rb.gravityScale = Random.Range(1,2f) ;
+		rb.constraints = RigidbodyConstraints2D.None;
+		col.isTrigger = true ;
+		toDestroy = true ;
 	}
 
-	public void OnDestroy()
+	void OnTriggerEnter2D(Collider2D coll) 
 	{
-		if( BubblePool.Manager != null ) BubblePool.Manager.UnRegisterBubbles( this );
+		//this.DebugError( coll.gameObject.layer ) ;
+		if( coll.gameObject.layer == LayerMask.NameToLayer("Wall") && toDestroy )
+		{
+			Destroy( gameObject ) ;
+		}
 	}
 }

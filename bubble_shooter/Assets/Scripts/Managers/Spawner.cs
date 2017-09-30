@@ -28,7 +28,7 @@ public class Spawner : Singleton<Spawner>
 			}
 		}
 
-		BubblePool.Manager.InitRegistry();
+		//BubblePool.Manager.InitRegistry();
 	}
 
 	public GameObject InstantiateBubble( Vector3 position, Quaternion rotation, BubbleColor bubbleColor )

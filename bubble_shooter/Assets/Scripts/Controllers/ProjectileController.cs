@@ -47,7 +47,6 @@ public class ProjectileController : MonoBehaviour
 
 			rigidbdy.constraints = RigidbodyConstraints2D.FreezeAll ;
 			bubble.RegisterNeighbors() ;
-			bubble.MatchCheck() ;
 
 			Destroy( this ); // we remove the projectile controller attached to this object
 		}
