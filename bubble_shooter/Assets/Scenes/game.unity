@@ -284,6 +284,7 @@ GameObject:
   - component: {fileID: 439931466}
   - component: {fileID: 439931468}
   - component: {fileID: 439931467}
+  - component: {fileID: 439931469}
   m_Layer: 8
   m_Name: pillar (3)
   m_TagString: Untagged
@@ -312,7 +313,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 439931465}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 97cfb4f9d79c07b4eadb7fece5457666, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0.004432916, y: -0.0006571898}
@@ -353,6 +354,26 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!50 &439931469
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 439931465}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
 --- !u!1 &495742033
 GameObject:
   m_ObjectHideFlags: 0
@@ -478,8 +499,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isDestroyable: 0
-  projectileSpeed: 10
-  bubbleRadius: 1
+  projectileSpeed: 20
+  bubbleRadius: 1.2
   horBubbles: 6
   verBubbles: 6
   bubblePrefab: {fileID: 1316479298894704, guid: 9fdce93cd38327d4da79ad84ebe8fda8,
@@ -816,6 +837,7 @@ GameObject:
   - component: {fileID: 1761523485}
   - component: {fileID: 1761523487}
   - component: {fileID: 1761523486}
+  - component: {fileID: 1761523488}
   m_Layer: 8
   m_Name: pillar (2)
   m_TagString: Untagged
@@ -844,7 +866,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1761523484}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 97cfb4f9d79c07b4eadb7fece5457666, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_Offset: {x: 0.004432916, y: -0.0006571898}
@@ -885,3 +907,23 @@ SpriteRenderer:
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
+--- !u!50 &1761523488
+Rigidbody2D:
+  serializedVersion: 4
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1761523484}
+  m_BodyType: 1
+  m_Simulated: 1
+  m_UseFullKinematicContacts: 0
+  m_UseAutoMass: 0
+  m_Mass: 1
+  m_LinearDrag: 0
+  m_AngularDrag: 0.05
+  m_GravityScale: 1
+  m_Material: {fileID: 0}
+  m_Interpolate: 0
+  m_SleepingMode: 1
+  m_CollisionDetection: 0
+  m_Constraints: 0
