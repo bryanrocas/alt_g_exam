@@ -55,10 +55,10 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	// 0 = any
 	// 1 = same
 	// 2 = opposite
-	List<IBubble> MatchingNeighbors( int state )
+	List<IBubble> MatchingNeighbors( int state , float bonusRadius = 0f )
 	{
 		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , 
-			Game.Manager.bubbleRadius , 1 << LayerMask.NameToLayer("Bubble") );
+			Game.Manager.bubbleRadius + bonusRadius , 1 << LayerMask.NameToLayer("Bubble") );
 
 		List<IBubble> matchingNeighbors = new List<IBubble>();
 
@@ -86,19 +86,19 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 		return matchingNeighbors;
 	}
 
-	public List<IBubble> GetMatchingNeighbors ()
+	public List<IBubble> GetMatchingNeighbors ( float bonusRadius = 0f )
 	{
-		return MatchingNeighbors(1);
+		return MatchingNeighbors(1,bonusRadius);
 	}
 
-	public List<IBubble> GetOtherNeighbors ()
+	public List<IBubble> GetOtherNeighbors ( float bonusRadius = 0f )
 	{
-		return MatchingNeighbors(2);
+		return MatchingNeighbors(2,bonusRadius);
 	}
 
-	public List<IBubble> GetNeighbors ()
+	public List<IBubble> GetNeighbors ( float bonusRadius = 0f )
 	{
-		return MatchingNeighbors(0);
+		return MatchingNeighbors(0,bonusRadius);
 	}
 
 	public void NotifyOtherNeighbors()

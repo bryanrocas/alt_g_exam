@@ -28,7 +28,7 @@ public class AimController : MonoBehaviour
 
 	void Update()
 	{
-		#if DEBUG
+		#if DEBUGGER
 		Vector3 forward = transform.TransformDirection(Vector3.up) * 10f;
 		//this.Debug( forward );
 		Debug.DrawRay(transform.position, forward, Color.green);

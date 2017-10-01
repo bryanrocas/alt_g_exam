@@ -71,6 +71,13 @@ public class BubblePool : Singleton<BubblePool>
 		{
 			if( ctr >= 3 )
 			{
+				#if DEBUGGER
+				foreach( IBubble bubble in chainedBubbles )
+				{
+					this.Debug( "chained removal: " + bubble.ID ) ;
+				}
+				#endif
+
 				DestroyBubbles();
 				CheckCasualties() ;
 			}
@@ -89,15 +96,17 @@ public class BubblePool : Singleton<BubblePool>
 	void CheckCasualties()
 	{
 		List<IBubble> copyCasualty = new List<IBubble>( casualtyBubbles ) ;
-		Dictionary<int, int> dict = new Dictionary<int, int>() ;
+		List<IBubble> saved = new List<IBubble>() ;
+		List<IBubble> suspicion = new List<IBubble>() ;
 		List<IBubble> destroyList = new List<IBubble>() ;
 
-		foreach( IBubble nearBubble in copyCasualty )
+		// identify which among the casualties have 0 neighbors
+		foreach( Bubble nearBubble in copyCasualty )
 		{
 			this.Debug( "casualties: " + nearBubble.ID + " :: " + 
-				nearBubble.BubbleColor + " :: " + ((IBubbleDetect)nearBubble).GetNeighbors().Count ) ;
+				nearBubble.BubbleColor + " :: " + nearBubble.GetNeighbors().Count ) ;
 
-			if( ((IBubbleDetect)nearBubble).GetNeighbors().Count == 0 )
+			if( nearBubble.GetNeighbors().Count == 0 )
 			{
 				casualtyBubbles.Remove( nearBubble ) ;
 				destroyList.Add( nearBubble ) ;
@@ -106,50 +115,67 @@ public class BubblePool : Singleton<BubblePool>
 
 		copyCasualty = new List<IBubble>( casualtyBubbles ) ;
 
-		foreach( IBubbleDetect copy in copyCasualty )
+		foreach( Bubble copy in copyCasualty  )
 		{
-			int ctr = 0 ;
-			foreach( IBubbleDetect casualty in casualtyBubbles )
+			bool notSafe = true ;
+			IBubble stored = copy;
+
+			foreach( IBubble bubble in copy.GetNeighbors() )
 			{
-				this.Debug( "casualtyCheck: " + ((IBubble)copy).ID + "  :: "  +
-					((IBubble)casualty).ID + "  :: "  +
-					casualty.GetNeighbors().Contains( ((IBubble)copy) )
-				);
-				if( casualty.GetNeighbors().Contains( ((IBubble)copy) ) ) ctr++ ;
+				this.Debug( "casualtyCheck: " + 
+					copy.ID + " :: " + 
+					copy.BubbleColor + " :: " + 
+					bubble.ID + " :: " + 
+					bubble.BubbleColor + " :: " + 
+					casualtyBubbles.Contains( bubble ) ) ;
+
+				notSafe = casualtyBubbles.Contains( bubble ) ;
+
+				if( !notSafe ) break ;
 			}
-			if( ctr <= 1 ) dict.Add( ((IBubble)copy).ID , ctr ) ;
+
+			if( notSafe ) suspicion.Add( stored ) ;
+			else saved.Add( stored ) ;
 		}
 
-		foreach( int key in dict.Keys )
+		foreach( IBubble bubble in saved )
 		{
-			this.Debug( "post-Check: " + key + " :: " + dict[key] ) ;
+			this.Debug( "saved-Check: " + bubble.ID + " " + bubble.BubbleColor ) ;
 		}
 
-		// final check
-		foreach( int key in dict.Keys )
+		this.Debug( "suspicionCount: " + suspicion.Count ) ;
+
+		List<IBubble> copiedSuspicion = new List<IBubble>( suspicion ) ;
+
+		foreach( Bubble bubble in copiedSuspicion )
 		{
-			IBubble bubble = casualtyBubbles.Find( obj => obj.ID == key ) ;
-			this.Debug( "final check: " + key + " :: " + ((IBubbleDetect)bubble).GetNeighbors().Count ) ;
+			this.Debug( "suspicion-Check: " + bubble.ID + " " + bubble.BubbleColor ) ;
+			bool lastChance = false ;
 
-			List<IBubble> neigh = ((IBubbleDetect)bubble).GetNeighbors() ;
-
-			if( neigh.Count <= 1 ) 
+			foreach( IBubble saveBubble in saved )
 			{
-				foreach( IBubble neighB in neigh )
-				{
-					this.DebugError( "For Deletion - Neighborhood Check: " + bubble.ID +" :: "
-						+ neighB.ID 
-						+ " :: " + casualtyBubbles.Contains( neighB ) ) ;
-				}
-				destroyList.Add( bubble ) ;
+				lastChance = bubble.GetNeighbors().Contains( saveBubble ) ;
+
+				if( lastChance ) break;
 			}
+
+			if( lastChance ) suspicion.Remove( bubble ) ;
 		}
+
+		foreach( Bubble bubble in suspicion )
+		{
+			this.Debug( "suspicion-Check-LAST: " + bubble.ID + " " + bubble.BubbleColor ) ;
+			destroyList.Add( bubble ) ;
+		}
+
 
 		this.DebugError( "For Deletion: " + destroyList.Count ) ;
 
 		foreach( IBubble bubble in destroyList )
 		{
 			this.Debug( "For Deletion: " +bubble.ID ) ;
+			bubble.FallDown();
 		}
+
 	}
 }
