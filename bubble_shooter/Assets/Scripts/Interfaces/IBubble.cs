@@ -18,4 +18,5 @@ public interface IBubble
 	Vector3 BubblePos{ get; }
 
 	void Init( int id , BubbleColor bubbleColor );
+	void FallDown();
 }

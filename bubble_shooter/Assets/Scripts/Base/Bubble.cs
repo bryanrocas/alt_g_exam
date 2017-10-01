@@ -55,7 +55,7 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	// 0 = any
 	// 1 = same
 	// 2 = opposite
-	public List<IBubble> MatchingNeighbors( int state )
+	List<IBubble> MatchingNeighbors( int state )
 	{
 		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , 
 			Game.Manager.bubbleRadius , 1 << LayerMask.NameToLayer("Bubble") );
@@ -91,23 +91,33 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 		return MatchingNeighbors(1);
 	}
 
+	public List<IBubble> GetOtherNeighbors ()
+	{
+		return MatchingNeighbors(2);
+	}
+
+	public List<IBubble> GetNeighbors ()
+	{
+		return MatchingNeighbors(0);
+	}
+
 	public void NotifyOtherNeighbors()
 	{
-		List<IBubble> matchingNeighbors = MatchingNeighbors(2);
+		List<IBubble> matchingNeighbors = GetOtherNeighbors();
 
 		Vector3 savedPos = transform.position ;
 
-		foreach( IBubble bubble in matchingNeighbors )
+		foreach( IBubbleDetect bubble in matchingNeighbors )
 		{
-			//if( savedPos.magnitude > bubble.BubblePos.magnitude )
-			//{
+			this.Debug( "NotifyOtherNeighbors: " + ((IBubble)bubble).ID + " :: " + bubble.GetNeighbors().Count ); 
+			if( bubble.GetNeighbors().Count <= 3 )
+			{
 				//this.DebugError( savedPos.magnitude + " " + bubble.BubblePos.magnitude + " " +bubble.ID ) ;
 
-				((IBubbleDetect)bubble).CheckAnchors() ;
-			//}
+				bubble.CheckAnchors() ;
+			}
 		}
 	}
-
 
 	public void RegisterSelf()
 	{
@@ -122,20 +132,11 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 
 	public void CheckAnchors()
 	{
-		List<IBubble> matchingNeighbors = MatchingNeighbors(0) ;
+		List<IBubble> matchingNeighbors = GetNeighbors() ;
 
-		this.DebugError( "ANCHOR CHECKED! " + ID + " " + matchingNeighbors.Count ) ;
-
-
+		//this.DebugError( "ANCHOR CHECKED! " + ID + " " + matchingNeighbors.Count ) ;
 
 		if( matchingNeighbors.Count == 0 ) FallDown(); // if nobody is supporting this, fall down
-		else
-		{
-			foreach( IBubble bubble in matchingNeighbors )
-			{
-				this.Debug( "checking... " + bubble.ID ) ;
-			}
-		}
 	}
 
 	bool toDestroy = false ;
@@ -144,7 +145,7 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	{
 		gameObject.layer = 10; // set to destroyed layer
 		
-		NotifyOtherNeighbors() ;
+		//NotifyOtherNeighbors() ;
 
 		rb = GetComponent<Rigidbody2D>();
 		col = GetComponent<Collider2D>();

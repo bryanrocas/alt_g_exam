@@ -500,7 +500,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isDestroyable: 0
   projectileSpeed: 100
-  bubbleRadius: 1
+  bubbleRadius: 1.2
   horBubbles: 9
   verBubbles: 7
   bubblePrefab: {fileID: 1316479298894704, guid: 9fdce93cd38327d4da79ad84ebe8fda8,

@@ -4,7 +4,9 @@ using UnityEngine;
 
 public interface IBubbleDetect
 {
+	List<IBubble> GetNeighbors ();
 	List<IBubble> GetMatchingNeighbors();
+	List<IBubble> GetOtherNeighbors ();
 	void NotifyOtherNeighbors();
 	void RegisterSelf();
 	void RegisterNeighbors();
