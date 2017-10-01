@@ -52,11 +52,10 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	}
 	#endregion
 
-
-
-
-
-	public List<IBubble> GetMatchingNeighbors ()
+	// 0 = any
+	// 1 = same
+	// 2 = opposite
+	public List<IBubble> MatchingNeighbors( int state )
 	{
 		Collider2D[] cols = Physics2D.OverlapCircleAll( new Vector2(transform.position.x , transform.position.y) , 
 			Game.Manager.bubbleRadius , 1 << LayerMask.NameToLayer("Bubble") );
@@ -67,12 +66,39 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 		{
 			IBubble bubble = col.GetComponent<IBubble>() ;
 			if( bubble == null ) continue;
-			if( bubble != this && bubble.BubbleColor == BubbleColor ) matchingNeighbors.Add( bubble );
+
+			switch( state )
+			{
+				case 0:
+				if( bubble != this )matchingNeighbors.Add( bubble );
+				break ;
+
+				case 1:
+				if( bubble != this && bubble.BubbleColor == BubbleColor ) matchingNeighbors.Add( bubble );
+				break;
+			
+				case 2: 
+				if( bubble.BubbleColor != BubbleColor ) matchingNeighbors.Add( bubble );
+				break;
+			}
 		}
 
-		//this.DebugError( "neighborCount: " + matchingNeighbors.Count + " ID " + this.ID ) ;
-
 		return matchingNeighbors;
+	}
+
+	public List<IBubble> GetMatchingNeighbors ()
+	{
+		return MatchingNeighbors(1);
+	}
+
+	public void NotifyOtherNeighbors()
+	{
+		List<IBubble> matchingNeighbors = MatchingNeighbors(2);
+
+		foreach( IBubbleDetect bubbleDet in matchingNeighbors )
+		{
+			bubbleDet.CheckAnchors() ;
+		}
 	}
 
 
@@ -87,10 +113,21 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 		BubblePool.Manager.RegisterNeighbors( matchingNeighbors  );
 	}
 
+	public void CheckAnchors()
+	{
+		List<IBubble> matchingNeighbors = MatchingNeighbors(0) ;
+
+		this.Debug( "ANCHOR CHECKED! " + ID + " " + matchingNeighbors.Count ) ;
+	}
+
 	bool toDestroy = false ;
 
 	public void FallDown()
 	{
+		gameObject.layer = 10; // set to destroyed layer
+		
+		NotifyOtherNeighbors() ;
+
 		rb = GetComponent<Rigidbody2D>();
 		col = GetComponent<Collider2D>();
 		rb.mass = Random.Range(0.2f,1f) ;

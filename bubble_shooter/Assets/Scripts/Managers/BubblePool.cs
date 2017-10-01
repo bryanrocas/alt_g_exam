@@ -43,12 +43,12 @@ public class BubblePool : Singleton<BubblePool>
 			{
 				chainedBubbles.Add( bubble ) ;
 				requireChain.Add( bubble ) ;
-				this.Debug( "reqChain: " +  requireChain.Count + " ID " + bubble.ID ) ;
+				//this.Debug( "reqChain: " +  requireChain.Count + " ID " + bubble.ID ) ;
 				ctr++;
 			}
 		}
 
-		this.DebugError( "FinalSequence: " + ctr + " " + requireChain.Count + " " + chainedBubbles.Count   ) ;
+		//this.DebugError( "FinalSequence: " + ctr + " " + requireChain.Count + " " + chainedBubbles.Count   ) ;
 
 		// each requireChain will be required to register their neighbors
 		foreach( IBubbleDetect bubble in requireChain )
@@ -58,15 +58,8 @@ public class BubblePool : Singleton<BubblePool>
 
 		if( requireChain.Count == 0 && ctr == chainedBubbles.Count  )
 		{
-			this.DebugError( ">>>>>>>>>>>>>>>>>>>>>>>>>>>>> " ) ;
-
 			if( ctr >= 3 ) DestroyBubbles();
 		}
-	}
-
-	void ResetChain()
-	{
-		this.DebugError( "Reset Chain" ) ;
 	}
 
 	void DestroyBubbles()
