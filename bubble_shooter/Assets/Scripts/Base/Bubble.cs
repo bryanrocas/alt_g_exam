@@ -95,9 +95,16 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	{
 		List<IBubble> matchingNeighbors = MatchingNeighbors(2);
 
-		foreach( IBubbleDetect bubbleDet in matchingNeighbors )
+		Vector3 savedPos = transform.position ;
+
+		foreach( IBubble bubble in matchingNeighbors )
 		{
-			bubbleDet.CheckAnchors() ;
+			//if( savedPos.magnitude > bubble.BubblePos.magnitude )
+			//{
+				//this.DebugError( savedPos.magnitude + " " + bubble.BubblePos.magnitude + " " +bubble.ID ) ;
+
+				((IBubbleDetect)bubble).CheckAnchors() ;
+			//}
 		}
 	}
 
@@ -117,7 +124,18 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 	{
 		List<IBubble> matchingNeighbors = MatchingNeighbors(0) ;
 
-		this.Debug( "ANCHOR CHECKED! " + ID + " " + matchingNeighbors.Count ) ;
+		this.DebugError( "ANCHOR CHECKED! " + ID + " " + matchingNeighbors.Count ) ;
+
+
+
+		if( matchingNeighbors.Count == 0 ) FallDown(); // if nobody is supporting this, fall down
+		else
+		{
+			foreach( IBubble bubble in matchingNeighbors )
+			{
+				this.Debug( "checking... " + bubble.ID ) ;
+			}
+		}
 	}
 
 	bool toDestroy = false ;
