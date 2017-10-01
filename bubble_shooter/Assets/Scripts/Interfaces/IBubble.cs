@@ -15,6 +15,7 @@ public interface IBubble
 {
 	int ID{ get; }
 	BubbleColor BubbleColor{ get; }
+	Vector3 BubblePos{ get; }
 
 	void Init( int id , BubbleColor bubbleColor );
 }

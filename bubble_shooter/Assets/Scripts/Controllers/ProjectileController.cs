@@ -46,7 +46,7 @@ public class ProjectileController : MonoBehaviour
 			transform.position = new Vector3(coll.transform.position.x + dir.x, coll.transform.position.y + dir.y, 1f)  ;
 
 			rigidbdy.constraints = RigidbodyConstraints2D.FreezeAll ;
-			bubble.RegisterNeighbors() ;
+			bubble.RegisterSelf() ;
 
 			Destroy( this ); // we remove the projectile controller attached to this object
 		}

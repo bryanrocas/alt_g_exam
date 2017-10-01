@@ -37,6 +37,14 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 		}
 	}
 
+	public Vector3 BubblePos
+	{
+		get
+		{
+			return transform.position ;
+		}
+	}
+
 	public void Init (int id, BubbleColor bubbleColor)
 	{
 		ID = id;
@@ -58,16 +66,25 @@ public class Bubble : MonoBehaviour, IBubble, IBubbleDetect
 		foreach( Collider2D col in cols )
 		{
 			IBubble bubble = col.GetComponent<IBubble>() ;
-			if( bubble != null && bubble.BubbleColor == BubbleColor ) matchingNeighbors.Add( bubble );
+			if( bubble == null ) continue;
+			if( bubble != this && bubble.BubbleColor == BubbleColor ) matchingNeighbors.Add( bubble );
 		}
+
+		//this.DebugError( "neighborCount: " + matchingNeighbors.Count + " ID " + this.ID ) ;
 
 		return matchingNeighbors;
 	}
 
+
+	public void RegisterSelf()
+	{
+		BubblePool.Manager.ReigsterSelf( this );
+	}
+
 	public void RegisterNeighbors()
 	{
-		GetMatchingNeighbors();
-		BubblePool.Manager.RegisterNeighbors( GetMatchingNeighbors() );
+		List<IBubble> matchingNeighbors = GetMatchingNeighbors() ;
+		BubblePool.Manager.RegisterNeighbors( matchingNeighbors  );
 	}
 
 	bool toDestroy = false ;
