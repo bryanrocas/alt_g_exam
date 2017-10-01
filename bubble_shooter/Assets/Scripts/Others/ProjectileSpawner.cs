@@ -21,7 +21,7 @@ public class ProjectileSpawner : MonoBehaviour
 	}
 
 	int index = 0 ;
-	int bubbleColor ;
+	int bubbleColor = 0 ;
 
 	void InstantiateBubble()
 	{
@@ -31,7 +31,9 @@ public class ProjectileSpawner : MonoBehaviour
 		
 	void ChangeAmmo()
 	{
-		bubbleColor = Random.Range( 0, System.Enum.GetValues(typeof(BubbleColor)).Length );
+		if( bubbleColor >= System.Enum.GetValues(typeof(BubbleColor)).Length-1 ) bubbleColor = 0;
+		else bubbleColor++ ;
+		//Debug.LogError( (BubbleColor) bubbleColor + " " + bubbleColor  ) ;
 		loadedBubble.sprite = Spawner.Manager.FindSprite( (BubbleColor) bubbleColor );
 
 	}
